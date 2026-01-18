@@ -1,48 +1,28 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
+import java.sql.*; // Import dla JDBC
 import java.util.Random;
 
-public class KartaDnia extends JFrame {
+public class Test extends JFrame {
+    private JPanel TestPanel;
+    private JTextArea TestOpis;
+    private JLabel TestObrazek;
+    private JButton TestLosuj;
 
-    private JPanel KartaD;
-    private JButton Karta;
-    private JButton Powrot;
-    private JPanel Guziki;
-    private JLabel Tarot;
-    private JTextArea OpisKarty;
-
-
-
-
-    public KartaDnia() {
-
-
+    public Test(){
+        // Konfiguracja UI
+        setContentPane(TestPanel);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(500, 750);
+        setSize(500,750); // Zwiększyłem wysokość, aby zmieścił się opis i obrazek
         setLocationRelativeTo(null);
 
-        Gradient gradient = new Gradient();
-        gradient.setLayout(new BorderLayout());
+        // Ustawienia JTextArea dla lepszej czytelności
+        TestOpis.setLineWrap(true);
+        TestOpis.setWrapStyleWord(true);
+        TestOpis.setEditable(false);
 
-        gradient.add(KartaD, BorderLayout.CENTER);
-        setContentPane(gradient);
-        setVisible(true);
-
-        KartaD.setOpaque(false);
-        Karta.setOpaque(false);
-        Powrot.setOpaque(false);
-        Guziki.setOpaque(false);
-        OpisKarty.setLineWrap(true);
-        OpisKarty.setWrapStyleWord(true);
-        OpisKarty.setOpaque(false);
-        OpisKarty.setEditable(false);
-        OpisKarty.setFocusable(false);
-
-
-        Karta.addActionListener(new ActionListener() {
+        TestLosuj.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Random losuj = new Random();
@@ -65,12 +45,12 @@ public class KartaDnia extends JFrame {
                     if (rs.next()) {
                         // 1. Pobieramy i ustawiamy opis
                         String opis = rs.getString("opis");
-                        OpisKarty.setText(opis);
+                        TestOpis.setText(opis);
 
                         // 2. Pobieramy ścieżkę i ustawiamy obrazek
                         String sciezka = rs.getString("obrazek_sciezka");
                         ImageIcon icon = new ImageIcon(getClass().getResource(sciezka));
-                        Tarot.setIcon(icon);
+                        TestObrazek.setIcon(icon);
                     }
 
                 } catch (SQLException ex) {
@@ -82,15 +62,6 @@ public class KartaDnia extends JFrame {
             }
         });
 
-        Powrot.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Menu menu = new Menu();
-                dispose();
-            }
-        });
+        setVisible(true);
     }
-
-
-
 }
