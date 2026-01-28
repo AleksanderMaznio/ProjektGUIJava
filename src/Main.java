@@ -1,6 +1,8 @@
 void main() {
-   // Loading loading=new Loading();
-        KartaDnia kd=new KartaDnia();
+
+   Logowanie logowanie=new Logowanie();
+  // NowyUżytkownik nowyUżytkownik=new NowyUżytkownik();
+    //Historia historia=new Historia(1);
 
 
 

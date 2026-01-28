@@ -8,12 +8,12 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="eb813" class="javax.swing.JButton" binding="długoterminowaPrzepowioedniaButton" default-binding="true">
+      <component id="eb813" class="javax.swing.JButton" binding="historiaPrzepowiedniButton" default-binding="true">
         <constraints>
           <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Długoterminowa przepowioednia"/>
+          <text value="Historia przepowiedni"/>
         </properties>
       </component>
       <component id="a324b" class="javax.swing.JButton" binding="kartaDniaButton" default-binding="true">

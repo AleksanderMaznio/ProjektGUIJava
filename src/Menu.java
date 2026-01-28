@@ -5,13 +5,14 @@ import java.awt.event.ActionListener;
 
 public class Menu extends JFrame {
     private JPanel Menu;
-    private JButton długoterminowaPrzepowioedniaButton;
+    private JButton historiaPrzepowiedniButton;
     private JButton kartaDniaButton;
     private JButton znakZZodiakuButton;
     private JPanel Tekst;
     private JButton wyjdźButton;
-
-    public Menu(){
+    private int idUsera;
+    public Menu(int idUsera){
+        this.idUsera=idUsera;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500, 750);
         setLocationRelativeTo(null);
@@ -33,15 +34,21 @@ public class Menu extends JFrame {
         kartaDniaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                KartaDnia kartaDnia=new KartaDnia();
+                KartaDnia kartaDnia=new KartaDnia(idUsera);
                 dispose();
             }
         });
         znakZZodiakuButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Zodiac zodiac=new Zodiac();
+                Zodiac zodiac=new Zodiac(idUsera);
                 dispose();
+
+            }
+        });
+        historiaPrzepowiedniButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
             }
         });

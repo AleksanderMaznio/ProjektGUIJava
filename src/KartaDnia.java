@@ -15,10 +15,10 @@ public class KartaDnia extends JFrame {
     private JTextArea OpisKarty;
 
 
+    private int idUsera;
 
-
-    public KartaDnia() {
-
+    public KartaDnia(int idUsera) {
+            this.idUsera=idUsera;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500, 750);
@@ -46,28 +46,29 @@ public class KartaDnia extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Random losuj = new Random();
-                int id = losuj.nextInt(22); // Generuje id od 0 do 21
+                int id = losuj.nextInt(22);
 
-                // Dane do połączenia z XAMPP
+
                 String url = "jdbc:mysql://localhost:3306/tarot";
                 String user = "root";
                 String password = "";
 
-                // Zapytanie SQL z parametrem ?
+
                 String query = "SELECT opis, obrazek_sciezka FROM karty_tarota WHERE id = ?";
 
                 try (Connection conn = DriverManager.getConnection(url, user, password);
                      PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-                    pstmt.setInt(1, id); // Wstawiamy wylosowane id w miejsce ?
+                    pstmt.setInt(1, id);
                     ResultSet rs = pstmt.executeQuery();
 
                     if (rs.next()) {
-                        // 1. Pobieramy i ustawiamy opis
+
                         String opis = rs.getString("opis");
                         OpisKarty.setText(opis);
+                        OpisKarty.setOpaque(true);
+                        OpisKarty.setBackground(Color.BLACK);
 
-                        // 2. Pobieramy ścieżkę i ustawiamy obrazek
                         String sciezka = rs.getString("obrazek_sciezka");
                         ImageIcon icon = new ImageIcon(getClass().getResource(sciezka));
                         Tarot.setIcon(icon);
@@ -85,7 +86,7 @@ public class KartaDnia extends JFrame {
         Powrot.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Menu menu = new Menu();
+                Menu menu = new Menu(idUsera);
                 dispose();
             }
         });

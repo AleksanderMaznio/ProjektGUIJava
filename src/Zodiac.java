@@ -16,8 +16,9 @@ public class Zodiac extends JFrame {
     private JLabel Nazwa;
 
     private ImageIcon[] ZnakiZodiac=new ImageIcon[12];
-
-    public Zodiac() {
+    private int idUsera;
+    public Zodiac(int idUsera) {
+        this.idUsera=idUsera;
         WczytajZnaki();
 
         setTitle("Zodiac");
@@ -48,7 +49,7 @@ public class Zodiac extends JFrame {
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Menu menu=new Menu();
+                Menu menu=new Menu(idUsera);
                 dispose();
             }
         });
