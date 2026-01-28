@@ -62,7 +62,7 @@ public class Logowanie extends JFrame{
 
 
                     } else {
-                        // Brak dopasowania
+
                         JOptionPane.showMessageDialog(null, "Błędny login lub hasło.", "Błąd", JOptionPane.ERROR_MESSAGE);
                     }
 
