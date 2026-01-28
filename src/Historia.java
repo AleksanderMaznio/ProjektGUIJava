@@ -1,7 +1,8 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.sql.*; // Dodany import dla SQL
+import java.sql.*;
 
 public class Historia extends JFrame {
     private JPanel historiaPanel;
@@ -10,26 +11,22 @@ public class Historia extends JFrame {
     private JPanel Przyciski;
     private JPanel Tablica;
     private JPanel Gora;
+    private JScrollPane Scroll;
     private int idUsera;
     private DefaultTableModel model;
 
     public Historia(int idUsera) {
         this.idUsera = idUsera;
-
+        setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500, 750);
         setLocationRelativeTo(null);
-
         Gradient gradient = new Gradient();
         gradient.setLayout(new BorderLayout());
-
-
         historiaPanel.setOpaque(false);
         Przyciski.setOpaque(false);
         Tablica.setOpaque(false);
         Gora.setOpaque(false);
-
-
         String[] kolumny = {"Data losowania", "Wylosowana Karta"};
         model = new DefaultTableModel(kolumny, 0) {
             @Override
@@ -37,36 +34,48 @@ public class Historia extends JFrame {
                 return false;
             }
         };
-
         Tabela.setModel(model);
-
+        Scroll.setOpaque(false);
+        Scroll.getViewport().setOpaque(false);
+        Scroll.setBorder(BorderFactory.createEmptyBorder());
 
         Tabela.setOpaque(false);
-        Tabela.setBackground(new Color(0, 0, 0, 100));
+        Tabela.setBackground(new Color(0, 0, 0, 0));
+        Tabela.setGridColor(new Color(255, 255, 255, 40));
+
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                                                           boolean isSelected, boolean hasFocus, int row, int column) {
+
+                JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                c.setOpaque(false);
+                c.setHorizontalAlignment(SwingConstants.CENTER);
+                return c;
+            }
+        };
 
 
-
-
+        Tabela.setDefaultRenderer(Object.class, renderer);
+        Tabela.getTableHeader().setBackground(new Color(71, 1, 66));
+        Tabela.getTableHeader().setForeground(Color.WHITE);
+        Tabela.getTableHeader().setOpaque(false);
         gradient.add(historiaPanel, BorderLayout.CENTER);
         setContentPane(gradient);
-
-
         powrótButton.addActionListener(e -> {
-            new Menu(idUsera).setVisible(true);
+            Menu menu=new Menu(idUsera);
             dispose();
         });
 
-
         wczytajDane();
 
-        setVisible(true);
     }
 
     private void wczytajDane() {
         String url = "jdbc:mysql://localhost:3306/tarot";
         String user = "root";
         String password = "";
-
 
         String sql = "SELECT h.data_losowania, k.nazwa FROM historia_losowan h " +
                 "JOIN karty_tarota k ON h.karta_id = k.id " +
@@ -78,21 +87,14 @@ public class Historia extends JFrame {
 
             pstmt.setInt(1, idUsera);
             ResultSet rs = pstmt.executeQuery();
-
-
             model.setRowCount(0);
 
             while (rs.next()) {
-                String data = rs.getString("data_losowania");
-                String nazwaKarty = rs.getString("nazwa");
-
-
-                model.addRow(new Object[]{data, nazwaKarty});
+                model.addRow(new Object[]{rs.getString("data_losowania"), rs.getString("nazwa")});
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Błąd pobierania historii: " + e.getMessage());
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Błąd bazy: " + e.getMessage());
         }
     }
 }

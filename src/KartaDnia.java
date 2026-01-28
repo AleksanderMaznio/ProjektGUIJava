@@ -34,9 +34,9 @@ public class KartaDnia extends JFrame {
 
         OpisKarty.setLineWrap(true);
         OpisKarty.setWrapStyleWord(true);
-        OpisKarty.setOpaque(true); // Ustawiamy na true, żeby kolor tła był widoczny
-        OpisKarty.setBackground(new Color(71, 1, 66, 200)); // Półprzezroczysty fiolet
-        OpisKarty.setForeground(Color.WHITE); // Biały tekst dla lepszej czytelności
+        OpisKarty.setOpaque(true);
+        OpisKarty.setBackground(new Color(71, 1, 66, 200));
+
         OpisKarty.setEditable(false);
         OpisKarty.setFocusable(false);
 
@@ -49,7 +49,7 @@ public class KartaDnia extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Random losuj = new Random();
 
-                int idWylosowanejKarty = losuj.nextInt(23) ;
+                int idWylosowanejKarty = losuj.nextInt(22) ;
 
                 String url = "jdbc:mysql://localhost:3306/tarot";
                 String user = "root";
@@ -83,7 +83,6 @@ public class KartaDnia extends JFrame {
                         pstmtInsert.setInt(1, idUsera);
                         pstmtInsert.setInt(2, idWylosowanejKarty);
                         pstmtInsert.executeUpdate();
-                        System.out.println("Zapisano losowanie karty " + idWylosowanejKarty + " dla użytkownika " + idUsera);
                     }
 
 
