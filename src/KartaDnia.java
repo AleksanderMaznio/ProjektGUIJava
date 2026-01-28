@@ -14,11 +14,10 @@ public class KartaDnia extends JFrame {
     private JLabel Tarot;
     private JTextArea OpisKarty;
 
-
     private int idUsera;
 
     public KartaDnia(int idUsera) {
-            this.idUsera=idUsera;
+        this.idUsera = idUsera;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500, 750);
@@ -27,71 +26,83 @@ public class KartaDnia extends JFrame {
         Gradient gradient = new Gradient();
         gradient.setLayout(new BorderLayout());
 
-        gradient.add(KartaD, BorderLayout.CENTER);
-        setContentPane(gradient);
-        setVisible(true);
-
+        // Ustawienia GUI
         KartaD.setOpaque(false);
         Karta.setOpaque(false);
         Powrot.setOpaque(false);
         Guziki.setOpaque(false);
+
         OpisKarty.setLineWrap(true);
         OpisKarty.setWrapStyleWord(true);
-        OpisKarty.setOpaque(false);
+        OpisKarty.setOpaque(true); // Ustawiamy na true, żeby kolor tła był widoczny
+        OpisKarty.setBackground(new Color(71, 1, 66, 200)); // Półprzezroczysty fiolet
+        OpisKarty.setForeground(Color.WHITE); // Biały tekst dla lepszej czytelności
         OpisKarty.setEditable(false);
         OpisKarty.setFocusable(false);
 
+        gradient.add(KartaD, BorderLayout.CENTER);
+        setContentPane(gradient);
+        setVisible(true);
 
         Karta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Random losuj = new Random();
-                int id = losuj.nextInt(22);
 
+                int idWylosowanejKarty = losuj.nextInt(23) ;
 
                 String url = "jdbc:mysql://localhost:3306/tarot";
                 String user = "root";
                 String password = "";
 
+                String querySelect = "SELECT opis, obrazek_sciezka FROM karty_tarota WHERE id = ?";
+                String queryInsert = "INSERT INTO historia_losowan (user_id, karta_id) VALUES (?, ?)";
 
-                String query = "SELECT opis, obrazek_sciezka FROM karty_tarota WHERE id = ?";
 
-                try (Connection conn = DriverManager.getConnection(url, user, password);
-                     PreparedStatement pstmt = conn.prepareStatement(query)) {
+                try (Connection conn = DriverManager.getConnection(url, user, password)) {
 
-                    pstmt.setInt(1, id);
-                    ResultSet rs = pstmt.executeQuery();
 
-                    if (rs.next()) {
+                    try (PreparedStatement pstmtSelect = conn.prepareStatement(querySelect)) {
+                        pstmtSelect.setInt(1, idWylosowanejKarty);
+                        ResultSet rs = pstmtSelect.executeQuery();
 
-                        String opis = rs.getString("opis");
-                        OpisKarty.setText(opis);
-                        OpisKarty.setOpaque(true);
-                        OpisKarty.setBackground(Color.BLACK);
+                        if (rs.next()) {
+                            OpisKarty.setText(rs.getString("opis"));
 
-                        String sciezka = rs.getString("obrazek_sciezka");
-                        ImageIcon icon = new ImageIcon(getClass().getResource(sciezka));
-                        Tarot.setIcon(icon);
+                            String sciezka = rs.getString("obrazek_sciezka");
+
+                            java.net.URL imgURL = getClass().getResource(sciezka);
+                            if (imgURL != null) {
+                                Tarot.setIcon(new ImageIcon(imgURL));
+                            }
+                        }
                     }
+
+
+                    try (PreparedStatement pstmtInsert = conn.prepareStatement(queryInsert)) {
+                        pstmtInsert.setInt(1, idUsera);
+                        pstmtInsert.setInt(2, idWylosowanejKarty);
+                        pstmtInsert.executeUpdate();
+                        System.out.println("Zapisano losowanie karty " + idWylosowanejKarty + " dla użytkownika " + idUsera);
+                    }
+
+
+                    revalidate();
+                    repaint();
 
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(null, "Błąd SQL: " + ex.getMessage());
                     ex.printStackTrace();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Błąd: " + ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         });
 
-        Powrot.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Menu menu = new Menu(idUsera);
-                dispose();
-            }
+        Powrot.addActionListener(e -> {
+            new Menu(idUsera).setVisible(true);
+            dispose();
         });
     }
-
-
-
 }

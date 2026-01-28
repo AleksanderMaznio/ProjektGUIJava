@@ -56,7 +56,7 @@ public class Logowanie extends JFrame{
 
                     if (rs.next()) {
                                 int idUsera=rs.getInt("id");
-                        JOptionPane.showMessageDialog(null, "Logowanie pomyślne! Witaj " + rs.getString("imie")+idUsera);
+                        JOptionPane.showMessageDialog(null, "Logowanie pomyślne! Witaj " + rs.getString("imie"));
                      Menu menu=new Menu(idUsera);
                       dispose();
 
